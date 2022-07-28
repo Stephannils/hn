@@ -19,7 +19,7 @@ def sort_by_votes(hn_list):
     return sorted(hn_list, key=lambda k: k['score'], reverse=True)
 
 
-def create_custom_hn(links, subtext):
+def create_custom_hn(links, subtext, num_of_votes):
     hn = []
 
     for idx, item in enumerate(links):
@@ -29,12 +29,13 @@ def create_custom_hn(links, subtext):
 
         if has_score:
             score = int(has_score[0].getText().replace(' points', ''))
-            if score >= 100:
+            if score >= num_of_votes:
                 hn.append({'title': title, 'link': link, 'score': score})
     return hn
 
 
 num_of_pages = int(sys.argv[1])
+num_of_votes = int(sys.argv[2])
 
 hn_resources = get_hn_resources(num_of_pages)
 
@@ -44,6 +45,6 @@ links = soup.select('.titlelink')
 subtext = soup.select('.subtext')
 
 
-filtered_hn = create_custom_hn(links, subtext)
+filtered_hn = create_custom_hn(links, subtext, num_of_votes)
 
 pprint.pprint(sort_by_votes(filtered_hn))
